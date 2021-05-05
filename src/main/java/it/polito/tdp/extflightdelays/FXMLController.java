@@ -7,7 +7,7 @@ package it.polito.tdp.extflightdelays;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import it.polito.tdp.extflightdelays.model.ArcoPesato;
+import it.polito.tdp.extflightdelays.model.Archi;
 import it.polito.tdp.extflightdelays.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,20 +37,23 @@ public class FXMLController {
 	@FXML
 	void doAnalizzaAeroporti(ActionEvent event) {
 		txtResult.clear();
-
+		int distanza;
+		
 		try {
 			String s = distanzaMinima.getText();
-			Integer distanza = Integer.parseInt(s);
-			model.creaGrafo(distanza);
-
-			txtResult.appendText("Il grafo contiene " +model.numVertici()+ " vertici e " +model.numArchi()+ " archi.\n");
-			txtResult.appendText("Elenco delle rotte:\n");
-			for(ArcoPesato a: model.elencoArchi()) {
-				txtResult.appendText(a.toString());
-			}
-
+			distanza = Integer.parseInt(s);
 		}catch(NumberFormatException nfe) {
 			txtResult.setText("Inserire solo valori numerici!");
+			return;
+		}
+		
+		model.creaGrafo(distanza);
+
+		txtResult.appendText("Il grafo contiene " +model.numVertici()+ " vertici e " +model.numArchi()+ " archi.\n");
+		txtResult.appendText("Elenco delle rotte:\n");
+		
+		for(Archi a: model.elencoArchi()) {
+			txtResult.appendText(a.toString());
 		}
 	}
 
@@ -64,5 +67,6 @@ public class FXMLController {
 	public void setModel(Model model) {
 		this.model = model;
 		txtResult.setStyle("-fx-font-family: monospace");
+		txtResult.setDisable(true);
 	}
 }

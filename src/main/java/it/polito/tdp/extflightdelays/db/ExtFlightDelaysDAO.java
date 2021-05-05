@@ -95,10 +95,10 @@ public class ExtFlightDelaysDAO {
 		}
 	}
 
-	public List<Archi> getArchi() {
+	public List<Archi> getArchi(Map<Integer, Airport> idMap) {
 
 		String sql = "SELECT ORIGIN_AIRPORT_ID, DESTINATION_AIRPORT_ID, AVG(DISTANCE) AS media "
-				+ "	FROM flights GROUP BY ORIGIN_AIRPORT_ID";
+						+ "FROM flights f GROUP BY ORIGIN_AIRPORT_ID, DESTINATION_AIRPORT_ID";
 		List<Archi> result = new LinkedList<Archi>();
 
 		try {
@@ -107,8 +107,12 @@ public class ExtFlightDelaysDAO {
 			ResultSet rs = st.executeQuery();
 
 			while (rs.next()) {
-				Archi arco = new Archi(rs.getInt("ORIGIN_AIRPORT_ID"), rs.getInt("DESTINATION_AIRPORT_ID"), rs.getInt("media"));
-				result.add(arco);
+				Airport a1 = idMap.get(rs.getInt("ORIGIN_AIRPORT_ID"));
+				Airport a2 = idMap.get(rs.getInt("DESTINATION_AIRPORT_ID"));
+				if(a1!=null && a2!=null) {
+					Archi arco = new Archi(a1, a2, rs.getDouble("media"));
+					result.add(arco);
+				}
 			}
 
 			conn.close();

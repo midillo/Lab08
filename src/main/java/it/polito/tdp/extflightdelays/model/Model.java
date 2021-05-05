@@ -23,17 +23,28 @@ public class Model {
 		dao.loadAllAirports(idMap);
 	}
 
-	public void creaGrafo(int distanza) {
+	public void creaGrafo(double distanza) {
 		this.grafo = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
 		//aggiungo vertici
 		Graphs.addAllVertices(this.grafo, idMap.values());
 
 		//aggiungo archi
-		List<Archi> archi = dao.getArchi();
-		for(Archi a: archi) {
-			if(idMap.containsKey(a.getPartenza()) && idMap.containsKey(a.getArrivo()) && a.getMediaDistanza()<distanza){
-				Graphs.addEdge(this.grafo, idMap.get(a.getPartenza()), idMap.get(a.getArrivo()), a.getMediaDistanza());	
+		for(Archi a : dao.getArchi(idMap)) {
+			if(this.grafo.containsVertex(a.getPartenza()) && this.grafo.containsVertex(a.getArrivo())) {
+				if(a.getMediaDistanza()>distanza) {
+					DefaultWeightedEdge e = this.grafo.getEdge(a.getPartenza(), a.getArrivo());
+
+					if(e==null) {
+						Graphs.addEdgeWithVertices(this.grafo, a.getPartenza(), a.getArrivo(), a.getMediaDistanza());
+					}else {
+						double distanzaOld = this.grafo.getEdgeWeight(e);
+						double distanzaNew = (distanzaOld + a.getMediaDistanza())/2;
+
+						if(distanzaNew>distanza)
+							this.grafo.setEdgeWeight(e, distanzaNew);
+					}
+				}
 			}
 		}
 	}
@@ -46,13 +57,12 @@ public class Model {
 		return this.grafo.edgeSet().size();
 	}
 
-	public List<ArcoPesato> elencoArchi(){
-		List<ArcoPesato> result = new ArrayList<>();
+	public List<Archi> elencoArchi(){
+		List<Archi> result = new ArrayList<>();
 		for(DefaultWeightedEdge e: this.grafo.edgeSet()) {
-			result.add(new ArcoPesato(this.grafo.getEdgeSource(e), this.grafo.getEdgeTarget(e), this.grafo.getEdgeWeight(e)));
+			Archi a = new Archi(this.grafo.getEdgeSource(e), this.grafo.getEdgeTarget(e), (float)this.grafo.getEdgeWeight(e));
+			result.add(a);
 		}
 		return result;
 	}
-
-
 }

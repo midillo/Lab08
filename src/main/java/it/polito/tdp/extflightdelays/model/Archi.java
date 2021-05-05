@@ -2,63 +2,44 @@ package it.polito.tdp.extflightdelays.model;
 
 public class Archi {
 
-	private Integer partenza; 
-	private Integer arrivo;
-	private int mediaDistanza;
+	private Airport partenza; 
+	private Airport arrivo;
+	private double mediaDistanza;
 
-	public Archi(Integer partenza, Integer arrivo, Integer mediaDistanza) {
+	public Archi(Airport partenza, Airport arrivo, double mediaDistanza) {
 		super();
 		this.partenza = partenza;
 		this.arrivo = arrivo;
 		this.mediaDistanza = mediaDistanza;
 	}
 
-	public Integer getPartenza() {
+	public Airport getPartenza() {
 		return partenza;
 	}
 
-	public void setPartenza(Integer partenza) {
+	public void setPartenza(Airport partenza) {
 		this.partenza = partenza;
 	}
 
-	public Integer getArrivo() {
+	public Airport getArrivo() {
 		return arrivo;
 	}
 
-	public void setArrivo(Integer arrivo) {
+	public void setArrivo(Airport arrivo) {
 		this.arrivo = arrivo;
 	}
 
-	public Integer getMediaDistanza() {
+	public double getMediaDistanza() {
 		return mediaDistanza;
 	}
 
-	public void setMediaDistanza(Integer mediaDistanza) {
+	public void setMediaDistanza(double mediaDistanza) {
 		this.mediaDistanza = mediaDistanza;
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((arrivo == null) ? 0 : arrivo.hashCode());
-		return result;
+	public String toString() {
+		return "[" + partenza.getAirportName() + " - "+ arrivo.getAirportName() + " - distanza = " + mediaDistanza + "]\n";
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Archi other = (Archi) obj;
-		if (arrivo == null) {
-			if (other.arrivo != null)
-				return false;
-		} else if (!arrivo.equals(other.arrivo))
-			return false;
-		return true;
-	}
+	
 }
